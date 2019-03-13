@@ -59,6 +59,7 @@ message Order {
         Returned = 4;
     }
     Shipping shipping = 9;
+    string userId = 10;
     int64 created = 998;
     int64 updated = 999;
 }
@@ -66,11 +67,11 @@ message Order {
 message OrderItem {
     Type type = 1 [(gogoproto.moretags) = "validate:\"required,gte=1,lte=4\""];
     enum Type {
-        reserved = 0;
-        sku = 1;
-        discount = 2;
-        tax = 3;
-        shipping = 4;
+        Reserved = 0;
+        Sku = 1;
+        Discount = 2;
+        Tax = 3;
+        Shipping = 4;
     }
     int64 quantity = 2 [(gogoproto.moretags) = "validate:\"omitempty,gte=0\""];
     int64 amount = 3;
@@ -108,6 +109,7 @@ message NewRequest {
     map<string, string> metadata = 3;
     string email = 4 [(gogoproto.moretags) = "validate:\"omitempty,email\""];
     Shipping shipping = 5 [(gogoproto.moretags) = "validate:\"omitempty,dive\""];
+    string userId = 6 [(gogoproto.moretags) = "bson:\"user_id\" validate:\"required\""];
 }
 
 message GetRequest {
@@ -135,4 +137,5 @@ message ListRequest {
         UpdatedDesc = 3;
         UpdatedAsc = 4;
     }
+    string userId = 4;
 }

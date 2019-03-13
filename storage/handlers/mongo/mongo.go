@@ -106,10 +106,15 @@ func (h *handler) ListParent(parent string, obj object.Interfaces) (err error) {
 	return s.DB(h.database).C(obj.GetNamespace()).Find(bson.M{"parent": parent}).All(obj)
 }
 
-func (h *handler) List(obj object.Interfaces, opt object.ListOpt) (n int, err error) {
+func (h *handler) List(obj object.Interfaces, opt object.ListOpt, query ...bson.M) (n int, err error) {
 
 	wg := sync.WaitGroup{}
 	wg.Add(2)
+
+	var q bson.M
+	if len(query) > 0 {
+		q = query[0]
+	}
 
 	// list
 	go func() {
@@ -129,7 +134,7 @@ func (h *handler) List(obj object.Interfaces, opt object.ListOpt) (n int, err er
 		case object.SortUpdatedAsc:
 			msort = "+updated"
 		}
-		err = s.DB(h.database).C(obj.GetNamespace()).Find(nil).Skip(int(opt.Page * opt.Limit)).Limit(int(opt.Limit)).Sort(msort).All(obj)
+		err = s.DB(h.database).C(obj.GetNamespace()).Find(q).Skip(int(opt.Page * opt.Limit)).Limit(int(opt.Limit)).Sort(msort).All(obj)
 	}()
 
 	// count
@@ -137,7 +142,7 @@ func (h *handler) List(obj object.Interfaces, opt object.ListOpt) (n int, err er
 		defer wg.Done()
 		s := h.client.Clone()
 		defer s.Close()
-		n, err = s.DB(h.database).C(obj.GetNamespace()).Count()
+		n, err = s.DB(h.database).C(obj.GetNamespace()).Find(q).Count()
 	}()
 
 	wg.Wait()

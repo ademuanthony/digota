@@ -1,0 +1,32 @@
+version: '3'
+services:
+  digota:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digota
+    ports:
+     - 8082:80
+    restart: always
+    volumes:
+      - .:/go/src/github.com/digota/digota
+    environment:
+      DIGOTA_ADDRESS: "0.0.0.0:80"
+    depends_on:
+      - zookeeper
+      - mongodb
+  zookeeper:
+    image: zookeeper
+    restart: unless-stopped
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888
+
+  mongodb:
+    image: mvertes/alpine-mongo:3.2.3
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+

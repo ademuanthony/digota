@@ -40,6 +40,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"gopkg.in/mgo.v2/bson"
 	"sync"
 	"time"
 )
@@ -124,6 +125,7 @@ func (s *orderService) New(ctx context.Context, req *orderpb.NewRequest) (*order
 	o := &order{
 		Order: orderpb.Order{
 			Email:    req.GetEmail(),
+			UserId: req.GetUserId(),
 			Status:   orderpb.Order_Created,
 			Amount:   0,
 			Currency: req.GetCurrency(),
@@ -163,7 +165,7 @@ func (s *orderService) Get(ctx context.Context, req *orderpb.GetRequest) (*order
 	}
 
 	// acquire order lock
-	unlock, err := locker.Handler().TryLock(o, locker.DefaultTimeout)
+	unlock, err := locker.Handler().TryLock(o, time.Second)
 	if err != nil {
 		return nil, err
 	}
@@ -182,11 +184,16 @@ func (s *orderService) List(ctx context.Context, req *orderpb.ListRequest) (*ord
 
 	slice := orders{}
 
+	var query bson.M
+	if req.UserId != "" {
+		query = bson.M{"user_id": req.UserId}
+	}
+
 	n, err := storage.Handler().List(&slice, object.ListOpt{
 		Limit: req.GetLimit(),
 		Page:  req.GetPage(),
 		Sort:  object.SortNatural,
-	})
+	}, query)
 
 	if err != nil {
 		return nil, err
@@ -399,7 +406,7 @@ func getUpdatedOrderItems(reqItems []*orderpb.OrderItem) (orderItems []*orderpb.
 	// merge duplicated items
 	for _, v := range reqItems {
 		switch v.GetType() {
-		case orderpb.OrderItem_sku:
+		case orderpb.OrderItem_Sku:
 			if skuItem, ok := skuMap[v.Parent]; ok {
 				skuItem.Quantity += v.Quantity
 				continue
@@ -407,17 +414,17 @@ func getUpdatedOrderItems(reqItems []*orderpb.OrderItem) (orderItems []*orderpb.
 				skuMap[v.Parent] = v
 			}
 			fallthrough
-		case orderpb.OrderItem_discount:
+		case orderpb.OrderItem_Discount:
 			if v.Quantity <= 0 {
 				v.Quantity = 1
 			}
 			fallthrough
-		case orderpb.OrderItem_shipping:
+		case orderpb.OrderItem_Shipping:
 			if v.Quantity <= 0 {
 				v.Quantity = 1
 			}
 			fallthrough
-		case orderpb.OrderItem_tax:
+		case orderpb.OrderItem_Tax:
 			if v.Quantity <= 0 {
 				v.Quantity = 1
 			}
@@ -428,7 +435,7 @@ func getUpdatedOrderItems(reqItems []*orderpb.OrderItem) (orderItems []*orderpb.
 	// update order item data
 	for _, v := range orderItems {
 		switch v.GetType() {
-		case orderpb.OrderItem_sku:
+		case orderpb.OrderItem_Sku:
 			wg.Add(1)
 			// get the sku object
 			go func(orderItem *orderpb.OrderItem, wg *sync.WaitGroup) {
@@ -443,19 +450,19 @@ func getUpdatedOrderItems(reqItems []*orderpb.OrderItem) (orderItems []*orderpb.
 					orderItem.Description = item.GetName()
 				}
 			}(v, &wg)
-		case orderpb.OrderItem_discount:
+		case orderpb.OrderItem_Discount:
 			// nothing to fetch yet
 			if v.Description == "" {
 				v.Description = defaultDiscountDescription
 			}
 			fallthrough
-		case orderpb.OrderItem_shipping:
+		case orderpb.OrderItem_Shipping:
 			// nothing to fetch yet
 			if v.Description == "" {
 				v.Description = defaultShippingDescription
 			}
 			fallthrough
-		case orderpb.OrderItem_tax:
+		case orderpb.OrderItem_Tax:
 			// nothing to fetch yet
 			if v.Description == "" {
 				v.Description = defaultTaxDescription
@@ -482,7 +489,7 @@ func getLockedOrderItems(ctx context.Context, order *orderpb.Order) (items []*lo
 
 	for _, orderItem := range order.GetItems() {
 		switch orderItem.Type {
-		case orderpb.OrderItem_sku:
+		case orderpb.OrderItem_Sku:
 			wg.Add(1)
 			go func(orderItem *orderpb.OrderItem, wg *sync.WaitGroup) {
 				defer wg.Done()
@@ -507,11 +514,11 @@ func getLockedOrderItems(ctx context.Context, order *orderpb.Order) (items []*lo
 				})
 				mtx.Unlock()
 			}(orderItem, &wg)
-		case orderpb.OrderItem_discount:
+		case orderpb.OrderItem_Discount:
 			fallthrough
-		case orderpb.OrderItem_shipping:
+		case orderpb.OrderItem_Shipping:
 			fallthrough
-		case orderpb.OrderItem_tax:
+		case orderpb.OrderItem_Tax:
 			// nothing to get or lock
 			continue
 		}

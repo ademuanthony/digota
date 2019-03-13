@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:9f3b30d9f8e0d7040f729b82dcbc8f0dead820a133b3147ce355fc451f32d761"
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005"
+  version = "v0.3.1"
+
+[[projects]]
   digest = "1:b06d27db2f87588507f245345f329b4192809e72ab32385a26a6eb25988eb82e"
   name = "github.com/corpix/uarand"
   packages = ["."]
@@ -100,6 +108,22 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "4178557ae428460c3780a381c824a1f3aceb6325"
+
+[[projects]]
+  digest = "1:0f65b10afa740ebce239838198b7647ca95c6395738bbaec5748aceece17b07c"
+  name = "github.com/jinzhu/configor"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4edaf76fe18865e36de734d887f4c01bd05707af"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:ecd9aa82687cf31d1585d4ac61d0ba180e42e8a6182b85bd785fcca8dfeefc1b"
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:edbef42561faa44c19129b68d1e109fbc1647f63239250391eadc8d0e7c9f669"
@@ -324,6 +348,14 @@
   revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
   version = "v1.20.0"
 
+[[projects]]
+  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -337,6 +369,8 @@
     "github.com/grpc-ecosystem/go-grpc-middleware/testing",
     "github.com/grpc-ecosystem/go-grpc-middleware/testing/testproto",
     "github.com/icrowley/fake",
+    "github.com/jinzhu/configor",
+    "github.com/joho/godotenv",
     "github.com/kelseyhightower/envconfig",
     "github.com/pkg/errors",
     "github.com/rhymond/go-money",

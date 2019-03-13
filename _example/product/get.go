@@ -31,12 +31,12 @@ import (
 
 func main() {
 
-	c, err := sdk.NewClient("localhost:3051", &sdk.ClientOpt{
-		InsecureSkipVerify: false,
-		ServerName:         "server.com",
-		CaCrt:              "out/ca.crt",
-		Crt:                "out/client.com.crt",
-		Key:                "out/client.com.key",
+	c, err := sdk.NewClient("localhost:8082", &sdk.ClientOpt{
+		InsecureSkipVerify: true,
+		ServerName:         "server.merryworld.org",
+		CaCrt:              "../../cert/out/ca.merryworld.org.crt",
+		Crt:                "../../cert/out/client.merryworld.org.crt",
+		Key:                "../../cert/out/client.merryworld.org.key",
 	})
 
 	if err != nil {
@@ -47,7 +47,7 @@ func main() {
 
 	// Charge amount
 	log.Println(productpb.NewProductServiceClient(c).Get(context.Background(), &productpb.GetRequest{
-		Id: "cb379ae1-8729-4b32-ba7a-3119dc2bd211",
+		Id: "708208c9-efe5-4ff7-bf70-4f888a80126d",
 	}))
 
 }

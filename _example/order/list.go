@@ -31,12 +31,12 @@ import (
 
 func main() {
 
-	c, err := sdk.NewClient("localhost:3051", &sdk.ClientOpt{
-		InsecureSkipVerify: false,
-		ServerName:         "server.com",
-		CaCrt:              "out/ca.crt",
-		Crt:                "out/client.com.crt",
-		Key:                "out/client.com.key",
+	c, err := sdk.NewClient("localhost:8082", &sdk.ClientOpt{
+		InsecureSkipVerify: true,
+		ServerName:         "server.merryworld.org",
+		CaCrt:              "../../cert/out/ca.merryworld.org.crt",
+		Crt:                "../../cert/out/client.merryworld.org.crt",
+		Key:                "../../cert/out/client.merryworld.org.key",
 	})
 
 	if err != nil {

@@ -23,6 +23,7 @@
 package config
 
 import (
+	"github.com/jinzhu/configor"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -87,9 +88,16 @@ func LoadConfig() (*AppConfig, error) {
 		conf AppConfig
 		err  error
 	)
+
 	err = envconfig.Process("digota", &conf)
 	if err != nil {
 		return nil, err
 	}
+
+	err = configor.Load(&conf, "config.yml")
+	if err != nil {
+		return nil, err
+	}
+
 	return &conf, nil
 }

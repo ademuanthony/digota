@@ -32,7 +32,7 @@ go:
 	(protoc \
 	-I=. \
 	-I=../../../ \
-	-I=../../gogo/protobuf/protobuf \
+	-I=../../../gogo/protobuf/protobuf \
 	 --gogofast_out=plugins=grpc:../../../ \
 	payment/paymentpb/payment.proto)
 
@@ -59,6 +59,8 @@ go:
 	-I=../../gogo/protobuf/protobuf \
 	 --gogofast_out=plugins=grpc:../../../ \
 	product/productpb/product.proto)
+
+#protoc --proto_path=$GOPATH/src:$GOPATH/src/github.com/gogo/protobuf/protobuf:. --gogofast_out=plugins=grpc:. order/orderpb/order.proto
 
 php:
 

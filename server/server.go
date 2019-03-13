@@ -114,7 +114,8 @@ func getTlsOption(appConfig *config.AppConfig) grpc.ServerOption {
 	// Load the certificates from disk
 	certificate, err := tls.LoadX509KeyPair(appConfig.TLS.Crt, appConfig.TLS.Key)
 	if err != nil {
-		log.Panicf("could not load server key pair: %s", err)
+		dir, _ := os.Getwd()
+		log.Panicf("could not load server key pair: %s. Wd: %s. Crt: %s", err.Error(), dir, appConfig.TLS.Crt)
 	}
 
 	certPool := x509.NewCertPool()

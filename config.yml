@@ -1,7 +1,15 @@
 theme: jekyll-theme-cayman
+<<<<<<< HEAD
 insecure: true
 clients:
 - serial: "84CFF7C81DBA50EA033A5B0682E5F6F1"
   scopes:
   - READ
   - WRITE
+=======
+clients:
+  - serial: "1763A041D2475C5852F41F01A6E3E434"
+    scopes:
+      - READ
+      - WRITE
+>>>>>>> 25e6bde75f6b17e8a238cbb0d95a33031e98b0e9

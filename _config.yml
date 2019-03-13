@@ -1,1 +1,6 @@
 theme: jekyll-theme-cayman
+clients:
+  - serial: "1763A041D2475C5852F41F01A6E3E434"
+    scopes:
+      - READ
+      - WRITE
