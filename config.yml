@@ -1,0 +1,7 @@
+theme: jekyll-theme-cayman
+insecure: true
+clients:
+- serial: "84CFF7C81DBA50EA033A5B0682E5F6F1"
+  scopes:
+  - READ
+  - WRITE
