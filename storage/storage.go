@@ -27,6 +27,7 @@ import (
 	"github.com/digota/digota/config"
 	"github.com/digota/digota/storage/handlers/mongo"
 	"github.com/digota/digota/storage/object"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -43,7 +44,7 @@ type (
 		DropCollection(db string, doc object.Interface) error
 		DropDatabase(db string) error
 		One(doc object.Interface) error
-		List(docs object.Interfaces, opt object.ListOpt) (int, error)
+		List(docs object.Interfaces, opt object.ListOpt, query ...bson.M) (int, error)
 		ListParent(parent string, docs object.Interfaces) error
 		Insert(doc object.Interface) error
 		Update(doc object.Interface) error

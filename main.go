@@ -25,7 +25,9 @@ package main
 // prevents gofmt changes the imports order
 
 // first init
-import _ "github.com/digota/digota/config"
+import (
+	_ "github.com/digota/digota/config"
+)
 
 // standards imports
 import (
@@ -34,6 +36,7 @@ import (
 
 	"github.com/digota/digota/config"
 	"github.com/digota/digota/server"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v1"
 )
@@ -81,6 +84,10 @@ func init() {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	// set flags
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{

@@ -25,6 +25,7 @@ package storage
 import (
 	"github.com/digota/digota/config"
 	"github.com/digota/digota/storage/object"
+	"gopkg.in/mgo.v2/bson"
 	"testing"
 )
 
@@ -35,7 +36,7 @@ func (d *dummyStorage) Close() error                                            
 func (d *dummyStorage) DropCollection(db string, doc object.Interface) error         { return nil }
 func (d *dummyStorage) DropDatabase(db string) error                                 { return nil }
 func (d *dummyStorage) One(doc object.Interface) error                               { return nil }
-func (d *dummyStorage) List(docs object.Interfaces, opt object.ListOpt) (int, error) { return 0, nil }
+func (d *dummyStorage) List(docs object.Interfaces, opt object.ListOpt, query ...bson.M) (int, error) { return 0, nil }
 func (d *dummyStorage) ListParent(parent string, docs object.Interfaces) error       { return nil }
 func (d *dummyStorage) Insert(doc object.Interface) error                            { return nil }
 func (d *dummyStorage) Update(doc object.Interface) error                            { return nil }

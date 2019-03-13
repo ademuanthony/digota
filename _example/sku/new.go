@@ -23,22 +23,25 @@
 package main
 
 import (
-	"github.com/digota/digota/sdk"
-	"github.com/digota/digota/sku/skupb"
-	"golang.org/x/net/context"
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/digota/digota/payment/paymentpb"
+	"github.com/digota/digota/sdk"
+	"github.com/digota/digota/sku/skupb"
+	"github.com/icrowley/fake"
+	"golang.org/x/net/context"
 )
 
 func main() {
 
-	c, err := sdk.NewClient("localhost:3051", &sdk.ClientOpt{
-		InsecureSkipVerify: false,
-		ServerName:         "server.com",
-		CaCrt:              "out/ca.crt",
-		Crt:                "out/client.com.crt",
-		Key:                "out/client.com.key",
+	c, err := sdk.NewClient("localhost:8082", &sdk.ClientOpt{
+		InsecureSkipVerify: true,
+		ServerName:         "server.merryworld.org",
+		CaCrt:              "../../cert/out/ca.merryworld.org.crt",
+		Crt:                "../../cert/out/client.merryworld.org.crt",
+		Key:                "../../cert/out/client.merryworld.org.key",
 	})
 
 	if err != nil {
@@ -51,11 +54,11 @@ func main() {
 
 	// Charge amount
 	log.Println(skupb.NewSkuServiceClient(c).New(context.Background(), &skupb.NewRequest{
-		//Name:      fake.Brand(),
-		//Active:    true,
-		//Price:     uint64(rand.Int31n(10001)),
-		//Currency:  paymentpb.Currency_EUR,
-		Parent: "cb379ae1-8729-4b32-ba7a-3119dc2bd211",
+		Name:      fake.Brand(),
+		Active:    true,
+		Price:     uint64(rand.Int31n(10001)),
+		Currency:  paymentpb.Currency_EUR,
+		Parent: "708208c9-efe5-4ff7-bf70-4f888a80126d",
 		//Metadata: map[string]string{
 		//	"key": "val",
 		//},

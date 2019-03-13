@@ -23,24 +23,28 @@
 package main
 
 import (
+	"fmt"
 	"github.com/digota/digota/order/orderpb"
 	"github.com/digota/digota/payment/paymentpb"
 	"github.com/digota/digota/sdk"
 	"golang.org/x/net/context"
 	"log"
+	"os"
 )
 
 func main() {
 
-	c, err := sdk.NewClient("localhost:3051", &sdk.ClientOpt{
-		InsecureSkipVerify: false,
-		ServerName:         "server.com",
-		CaCrt:              "out/ca.crt",
-		Crt:                "out/client.com.crt",
-		Key:                "out/client.com.key",
+	c, err := sdk.NewClient("localhost:8082", &sdk.ClientOpt{
+		InsecureSkipVerify: true,
+		ServerName:         "server.merryworld.org",
+		CaCrt:              "cert/out/ca.merryworld.org.crt",
+		Crt:                "cert/out/client.merryworld.org.crt",
+		Key:                "cert/out/client.merryworld.org.key",
 	})
 
 	if err != nil {
+		dir, _ := os.Getwd()
+		fmt.Println(dir)
 		panic(err)
 	}
 
@@ -48,17 +52,17 @@ func main() {
 
 	// Create new order
 	o, err := orderpb.NewOrderServiceClient(c).New(context.Background(), &orderpb.NewRequest{
-		Currency: paymentpb.Currency_USD,
+		Currency: paymentpb.Currency_NGN,
 		Items: []*orderpb.OrderItem{
 			{
-				Parent:   "af350ecc-56c8-485f-8858-74d4faffa9cb",
+				Parent:   "d3854c1a-628a-4988-985e-682085e7256c",
 				Quantity: 2,
-				Type:     orderpb.OrderItem_sku,
+				Type:     orderpb.OrderItem_Sku,
 			},
 			{
-				Parent:   "af350ecc-56c8-485f-8858-74d4faffa9cb",
+				Parent:   "80e1b81e-e9d9-4208-9792-42e47168f0f5",
 				Quantity: 2,
-				Type:     orderpb.OrderItem_sku,
+				Type:     orderpb.OrderItem_Sku,
 			},
 			//{
 			//	Parent:   "480e53bf-b409-4a34-8c74-13786b35ae11",
@@ -73,17 +77,18 @@ func main() {
 			{
 				Amount:      -1000,
 				Description: "on the fly discount without parent",
-				Currency:    paymentpb.Currency_USD,
-				Type:        orderpb.OrderItem_discount,
+				Currency:    paymentpb.Currency_NGN,
+				Type:        orderpb.OrderItem_Discount,
 			},
 			{
 				Amount:      1000,
 				Description: "Tax (Included)",
-				Currency:    paymentpb.Currency_USD,
-				Type:        orderpb.OrderItem_tax,
+				Currency:    paymentpb.Currency_NGN,
+				Type:        orderpb.OrderItem_Tax,
 			},
 		},
 		Email: "yaron@digota.com",
+		UserId:"root",
 		Shipping: &orderpb.Shipping{
 			Name:  "Yaron Sumel",
 			Phone: "+972 000 000 000",
