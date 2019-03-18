@@ -117,7 +117,7 @@ func (s *skuService) Get(ctx context.Context, req *skupb.GetRequest) (*skupb.Sku
 	}
 
 	// acquire lock
-	unlock, err := locker.Handler().TryLock(item, time.Second)
+	unlock, err := locker.Handler().TryLock(item, 3 * time.Second)
 	if err != nil {
 		return nil, err
 	}

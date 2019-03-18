@@ -1,5 +1,18 @@
 version: '3'
 services:
+  zookeeper:
+    image: zookeeper
+    restart: unless-stopped
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888
+  mongodb:
+    image: mvertes/alpine-mongo:3.2.3
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
   digota:
     build:
       context: .
@@ -15,18 +28,4 @@ services:
     depends_on:
       - zookeeper
       - mongodb
-  zookeeper:
-    image: zookeeper
-    restart: unless-stopped
-    ports:
-      - 2181:2181
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888
-
-  mongodb:
-    image: mvertes/alpine-mongo:3.2.3
-    restart: unless-stopped
-    ports:
-      - "27018:27017"
 
